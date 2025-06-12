@@ -5,18 +5,24 @@ contract Auction{
     address owner;
     uint256 currentOffer;
     address currentBidder;
+    uint256 expirationTime;
     mapping (address => uint256) offers;
-
-    constructor(uint256 _initialOffer){
+    /**
+        Se inicializa el smart contract con un monto inicial de oferta y
+         un tiempo de expiration en segundos
+    */
+    constructor(uint256 _initialOffer, uint256 _expirationSeconds){
         owner = msg.sender;
         currentOffer = _initialOffer;
+        expirationTime = block.timestamp + _expirationSeconds;
         
     }
-
+    
     function offer() payable external{
         require(msg.value > (currentOffer + (currentOffer * 5 /100)));
         offers[msg.sender] = msg.value;
         currentBidder =  msg.sender;
         currentOffer = msg.value;
     }
+
 }
